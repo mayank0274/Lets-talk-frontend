@@ -1,0 +1,21 @@
+::-webkit-scrollbar {
+  display: none;
+}
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+/* from singlemessage component => highlight links from message */
+.messageContent a {
+  color: chartreuse;
+}
+
+@media screen and (max-width: 700px) {
+  .homePageBg {
+    display: none;
+  }
+}
