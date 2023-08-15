@@ -10,7 +10,7 @@ A chat application made using MERN
 
 # Preview
 
-https://lets-talks.netlify.app/chat
+https://lets-talks.netlify.app
 
 # Features
 
