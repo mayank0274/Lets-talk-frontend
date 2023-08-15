@@ -9,11 +9,11 @@ import {
   useToast,
   InputGroup,
   InputRightElement,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { InfoOutlineIcon } from "@chakra-ui/icons";
 
 import { makeRequest } from "../utlis/utilityFunctions";
-import { color } from "framer-motion";
 
 const buttonStyle = {
   _hover: {
@@ -35,6 +35,8 @@ export const Signup = () => {
   const [isError, setIsError] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const toast = useToast();
+  const { isOpen, onClose } = useDisclosure;
+  const [isLabelOpen, setIsLabelOpen] = useState(false);
 
   // handle user input data
   const handleInput = (e) => {
@@ -234,8 +236,19 @@ export const Signup = () => {
               uppercase letters password must contain 1 lowercase letters
               password must contain 1 non-alpha numeric number password is 8-16
               characters with no space"
+                isOpen={isLabelOpen}
               >
-                <InfoOutlineIcon boxSize={4} cursor={"pointer"} ml="5px" />
+                <InfoOutlineIcon
+                  boxSize={4}
+                  cursor={"pointer"}
+                  ml="5px"
+                  onMouseEnter={() => {
+                    setIsLabelOpen(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsLabelOpen(false);
+                  }}
+                />
               </Tooltip>
             </FormLabel>
             <InputGroup size="md">

@@ -120,7 +120,12 @@ export const ForgotPassword = () => {
 
   return (
     <div style={sectionStyle}>
-      <Flex direction="column" w="30%">
+      <Flex
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        w={{ md: "35%", lg: "30%" }}
+      >
         <Heading color="#fff">
           <span
             style={{

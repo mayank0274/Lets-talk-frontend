@@ -13,6 +13,11 @@ import {
   useToast,
   Spinner,
   AbsoluteCenter,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { UserState } from "../context/userContext";
@@ -21,6 +26,7 @@ import { chatName, profilePic, makeRequest } from "../utlis/utilityFunctions";
 import { socket } from "../utlis/socketConnection";
 import { SingleMessage } from "./SingleMessage";
 import { MediaMessage } from "./MediaMessage";
+import moment from "moment/moment";
 
 const chatAreaStyle = {
   backgroundImage: `url(${chatAreaBg})`,
@@ -46,6 +52,7 @@ export const MessageArea = () => {
   const toast = useToast();
   const openFileSelection = useRef();
   const [fileType, setFileType] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [width, setWidth] = useState(window.innerWidth);
   window.addEventListener("resize", () => {
@@ -53,11 +60,11 @@ export const MessageArea = () => {
   });
 
   // function for sending message
-  const sendMessage = async (chatId, mediaInfo = null, queueMsg = "") => {
+  const sendMessage = async (chatId, mediaInfo = null) => {
     const url = `/api/message`;
     let body = {
       chatId,
-      message: queueMsg != "" ? queueMsg : message,
+      message: message,
     };
 
     // if message is media add that info
@@ -172,6 +179,7 @@ export const MessageArea = () => {
 
   // fetch message again if other chat is selected
   useEffect(() => {
+    setOldmessagelist([]);
     getOldMessages();
     compareSelectedChat = selectedChat;
   }, [selectedChat, isUpoadingMedia]);
@@ -194,6 +202,30 @@ export const MessageArea = () => {
       }
     });
   });
+
+  // function for exporting chat
+  const exportChat = async () => {
+    if (JSON.stringify(selectedChat) == "{}" || oldMessageList.length == 0) {
+      return;
+    }
+
+    await getOldMessages();
+
+    let fileData = "";
+    let linkElement = document.createElement("a");
+
+    oldMessageList.map((msg) => {
+      fileData += `${msg.sender.name} : ${msg.content} ( at ${moment(
+        msg.createdAt
+      ).format("DD-MM-YYYY HH:mm:ss a")})\r\n`;
+    });
+
+    const fileBlob = new Blob([fileData], { type: "text/plain;charset=utf-8" });
+    linkElement.href = URL.createObjectURL(fileBlob);
+    linkElement.download = "chat.txt";
+    document.body.appendChild(linkElement);
+    linkElement.click();
+  };
 
   return (
     // main chat area opens when user click on a chat => uses profile,singlemessage component
@@ -246,8 +278,8 @@ export const MessageArea = () => {
               <Profile chat={selectedChat} closeProfilePanel={setShowProfile} />
             )}
             {/* to be added in next updates */}
-            {/* <HStack mr="15px">
-              <i
+            <HStack mr="15px">
+              {/* <i
                 className="fa-solid fa-phone"
                 style={{
                   fontSize: "17px",
@@ -258,8 +290,28 @@ export const MessageArea = () => {
               <i
                 className="fa-solid fa-video"
                 style={{ fontSize: "17px", cursor: "pointer" }}
-              ></i>
-            </HStack> */}
+              ></i> */}
+
+              <Menu>
+                <MenuButton mr="25px">
+                  <i
+                    className="fa-solid fa-ellipsis-vertical"
+                    style={{ fontSize: "17px", cursor: "pointer" }}
+                  ></i>
+                </MenuButton>
+                <MenuList bg="#454545" border="none">
+                  <MenuItem
+                    bg="#454545"
+                    onClick={() => {
+                      onOpen();
+                      exportChat();
+                    }}
+                  >
+                    Export Chat
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </HStack>
           </Flex>
 
           <VStack height={{ base: "73%", lg: "80%" }} overflowY="scroll">

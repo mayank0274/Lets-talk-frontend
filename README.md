@@ -21,3 +21,7 @@ https://lets-talks.netlify.app/chat
 - Notifications
 
 - Send both text and media messages
+
+- Preview or download media messages
+
+- Export chat

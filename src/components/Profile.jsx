@@ -27,6 +27,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   Center,
+  Link,
 } from "@chakra-ui/react";
 import { DeleteIcon, CheckIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 import {
@@ -215,7 +216,7 @@ export const Profile = (props) => {
               </Center>
 
               {chat.isGroupChat && (
-                <Flex w="90%">
+                <Flex w="90%" my="7px">
                   <Editable defaultValue={newGroupName} color="#fff" w="80%">
                     <EditablePreview
                       color="#fff"
